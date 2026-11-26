@@ -1,0 +1,14 @@
+# allow-list: only code, docs and assets belong in the repo
+*
+!.gitignore
+!LICENSE
+!README.md
+!install.sh
+!install.ps1
+!skill/
+!skill/**
+!assets/
+!assets/*.png
+!assets/src/
+!assets/src/*.html
+!.gitattributes
