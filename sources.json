@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {"id":"impeccable","repo":"pbakaus/impeccable","commit":"2fc5e1459efbbf06d92c7306517c286bf12490cf"},
+    {"id":"taste","repo":"Leonxlnx/taste-skill","commit":"d1a2bb41d927083ac7118f60cfc9cdf711810ea0"},
+    {"id":"ui-ux-pro-max","repo":"nextlevelbuilder/ui-ux-pro-max-skill","commit":"b73ee96f8d4ff7bbc279c52dadcd907ffe23629c"},
+    {"id":"anthropic","repo":"anthropics/skills","commit":"e4bb5d960d87126ff3b3a8af1a104b7db67560ba","include":["skills/frontend-design/","LICENSE","NOTICE","README.md"]},
+    {"id":"emil","repo":"emilkowalski/skills","commit":"64eb3deb9a5fbfa041faf783e0bc3fd635872e9c"},
+    {"id":"motion","repo":"frankxai/awesome-motion-design-agent-skills","commit":"e7dc6e2e728c918ffcea5edb2d7c94e2a6f7785d"},
+    {"id":"vercel","repo":"vercel-labs/agent-skills","commit":"5a37a6329fbad3666c3207392a6a7c0110e92efb"},
+    {"id":"designer","repo":"Owl-Listener/designer-skills","commit":"9a6930cf84a822eb458624bd11c61aac5bbdf224"},
+    {"id":"remotion","repo":"remotion-dev/skills","commit":"a3f4098a2afd0e13f6a6f8c8760e275f75457ea9","dependency_of":"motion","declared_skill":"remotion-best-practices","declared_hash":"006f8413941b59eff54a7ce64851b8a2fb79e7a3a5f1a895e97a48f01482553d"}
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Flow"
+  short_description: "One design workflow with bundled specialist skills"
+  default_prompt: "Use $design-flow to select the bundled specialists, complete this design task, and verify the result."

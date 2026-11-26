@@ -1,0 +1,26 @@
+node_modules/
+dist/
+out/
+.agents/
+.env
+.env.*
+*.mp4
+*.webm
+*.gif
+*.mov
+*.log
+
+# Starlight/ACOS temporary files
+.agent/
+.system_generated/
+.next-backup/
+temp-*.json
+link-checker-report.json
+link-checker-report.txt
+
+# Starlight/ACOS temporary files
+.starlight/
+.gemini/
+
+# Local checkpoint patches
+.asph-wip/

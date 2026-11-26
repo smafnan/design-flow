@@ -12,3 +12,12 @@
 !assets/src/
 !assets/src/*.html
 !.gitattributes
+!install.py
+!sources.json
+!requirements-build.txt
+!tools/
+!tools/*.py
+!docs/
+!docs/*.md
+**/__pycache__/
+**/*.pyc

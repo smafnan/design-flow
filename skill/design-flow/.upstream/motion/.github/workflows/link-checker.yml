@@ -1,0 +1,77 @@
+name: Link Checker
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  pr-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          args: >-
+            --accept=200,204,429
+            --timeout=20
+            --max-retries=3
+            --exclude https://github.com/frankxai/awesome-jarvis
+            --exclude 'releases/(download|tag)/skills-latest'
+            './**/*.md'
+          fail: true
+          jobSummary: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  monthly:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          args: >-
+            --accept=200,204,429
+            --timeout=20
+            --max-retries=3
+            --exclude https://github.com/frankxai/awesome-jarvis
+            --exclude 'releases/(download|tag)/skills-latest'
+            './**/*.md'
+          fail: false
+          jobSummary: true
+          output: ./lychee/out.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Find existing broken-link issue
+        if: steps.lychee.outputs.exit_code != 0
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --label broken-links --state open \
+                --json number --jq 'max_by(.number).number // empty')
+          echo "number=$n" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update broken-link issue
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v6
+        with:
+          title: Broken links detected
+          content-filepath: ./lychee/out.md
+          labels: broken-links
+          issue-number: ${{ steps.existing.outputs.number }}

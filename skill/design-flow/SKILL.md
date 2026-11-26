@@ -1,56 +1,74 @@
 ---
 name: design-flow
-description: Orchestrates all installed design skills on the current project. Scans available skills, picks the right ones for the task (build, redesign, motion, review, accessibility, UX), then does the work and verifies it. Use when the user runs /design-flow or asks for a full design pass on a project.
-argument-hint: "<what to design or improve, e.g. 'redesign the landing page' or 'polish dashboard'>"
+description: Plan, build, redesign, polish, and review interfaces using bundled design specialists. Combines UI/UX research, visual direction, design systems, frontend engineering, interaction, animation, accessibility, and QA. Also routes explicit video, native UI, and Vercel deployment requests to their specialists. Use for a complete design pass or a targeted design task.
 ---
 
-# design-flow
+# Design Flow
 
-Task from the user: $ARGUMENTS
-(If empty, ask one short question: what should be designed or improved, and for whom.)
+One workflow with the complete design-studio collection included. Select relevant original skills, read their full instructions, execute the requested work, and verify the result. The whole directory is the skill; SKILL.md alone is insufficient.
 
-## Step 1: Understand the project (read-only, be quick)
-- Detect stack: `package.json`, framework (Next/React/Vue/Svelte/Astro/plain HTML), Tailwind, component library, React Native/Expo/Swift.
-- Look for existing design context: `DESIGN.md`, `PRODUCT.md`, design tokens, `tailwind.config.*`, global CSS, brand assets, a `.impeccable*` folder.
-- Note the target: new build, redesign, or polish of existing UI. Note pages/components in scope.
+`<skill-root>` means the directory containing this file. Use Python 3.10+ (`python`, `python3`, or `py -3` as available). The static [catalog](CATALOG.md) supports discovery without Python.
 
-## Step 2: Discover available design skills (do this every run, never assume)
-Collect skills from both locations and read each one's frontmatter `name` and `description`:
+## 1. Understand
+
+Identify the task, user, stack, affected surfaces, and scope. Inspect project instructions, existing UI, components, tokens, brand assets, and relevant PRODUCT.md or DESIGN.md. Distinguish a new build, redesign, refinement, and review. Infer reasonable defaults; ask only when missing information materially changes the work. A focused fix does not need a full design exercise.
+
+## 2. Discover
+
+```text
+python "<skill-root>/scripts/pack.py" search "<task words>"
+python "<skill-root>/scripts/pack.py" list --source designer
+python "<skill-root>/scripts/pack.py" locate <catalog-id>
 ```
-for f in ~/.claude/skills/*/SKILL.md .claude/skills/*/SKILL.md; do
-  [ -f "$f" ] && echo "$(basename $(dirname $f)): $(grep -m1 '^description:' $f | cut -c14-200)"
-done
+
+Read the selected original SKILL.md and relevant references. Relative paths resolve from that original file's directory. Scripts, datasets, templates, assets, notices, and complete source trees are bundled. Duplicate platform manifests and development fixtures are retained but excluded from default search; use `list --all` to inspect them. Fixtures are not production workflows.
+
+Also consider relevant skills exposed by the current agent or existing project skill directories. Respect a user-named specialist. Do not assume a Claude-specific Skill tool exists: reading original instructions and using available tools is the portable path.
+
+## 3. Plan
+
+Choose one primary workflow and only the supporting specialists needed. State the sequence briefly, then proceed within the authorized scope. Existing brand and task constraints take priority over generic aesthetic preferences. Reviews produce findings unless fixes are also requested.
+
+| Phase | Bundled collections |
+| --- | --- |
+| Direction and visual refinement | Impeccable, Taste, Anthropic frontend-design, UI UX Pro Max |
+| Research, flows, copy, systems, handoff | Designer Skills |
+| Implementation and performance | Vercel, UI UX Pro Max, Emil |
+| Interaction and motion | Emil, FrankX motion, Remotion |
+| Review, accessibility, responsive QA | Designer Skills, Impeccable, Vercel, FrankX motion |
+
+Use motion only when it benefits the task. Deployment and external service work require a user request or existing authorization; installing instructions does not authorize publishing.
+
+## 4. Execute
+
+Follow the complete original specialist instructions rather than a summary. Load further specialists only for distinct needs. Resolve conflicts by the brief, task purpose, accessibility, and project conventions. Preserve truthful content; label demonstration data. Reuse existing components and dependencies where suitable.
+
+Read [PORTABILITY.md](PORTABILITY.md) before the first script-backed workflow. Resolve source directories with `locate`; map upstream hardcoded installation paths to those locations. Keep cwd at the user's project for helpers that operate on it.
+
+```text
+python "<skill-root>/scripts/pack.py" run <catalog-id> -- python "<skill-dir>/scripts/example.py" <arguments>
 ```
-Keep only design-related ones (UI, UX, visual, motion, animation, accessibility, typography, color, layout, design system, frontend, critique, research). Ignore unrelated skills.
 
-## Step 3: Pick a short plan (3-6 skills, not all)
-Choose by phase. Prefer skills that exist; substitute if one is missing.
-1. **Direction**: `taste-skill`, `impeccable`, `frontend-design`, `ui-ux-pro-max` (pick ONE primary art-direction skill; use others only to fill gaps). For a new design system also `design-token`, `color-system`, `typography-scale`, `spacing-system`.
-2. **Build**: the primary skill from phase 1, plus stack skills: `react-best-practices`, `composition-patterns` (React/Next), `ui-styling` (Tailwind/shadcn), `mobile-native` or `animate-expo` (mobile), `responsive-design`, `form-design`, `loading-states` as needed.
-3. **Motion** (only if the task or product benefits): `animate`, `choreograph`, `gestures`, `react-view-transitions`, `motion-director`.
-4. **Review**: `web-design-guidelines`, `break-ui`, `review-animations`, `web-motion-auditor`, `critique-visual-hierarchy`, `critique-typography`, `critique-color`, `critique-composition`.
-5. **Accessibility and UX**: `accessibility-audit`, `heuristic-evaluation`, `ux-writing`.
+The runner expands `<skill-dir>`, `<repo-dir>`, and `<plugin-dir>` and scopes compatible environment variables to the child process. The example filename is illustrative; inspect actual scripts before invoking them.
 
-Tell the user the plan in 3-5 lines: which skills, in what order, and why. Then proceed without waiting unless the scope is ambiguous or the change is large (many files, deleting existing design). In that case confirm first.
+Upstream hooks, MCP definitions, and custom agents are preserved but not automatically registered by reading Markdown. Use documented manual equivalents when possible. Report unavailable host features; never claim a hook or gate ran when it did not.
 
-## Step 4: Execute
-- Invoke each chosen skill with the Skill tool, in order, and follow its instructions for this project.
-- Resolve conflicts explicitly: one art-direction skill leads; others must not contradict it. Existing brand/tokens win over generic taste.
-- Match the project's stack and conventions. Reuse existing components and tokens. Do not add dependencies without saying so.
-- Use real content or clearly marked placeholders. Never invent customer data.
+## 5. Verify
 
-## Step 5: Verify
-- Run the project's build/lint/tests if present.
-- If a dev server and browser tools are available, view the result at mobile and desktop widths and check for broken layout, contrast, focus states, and reduced-motion behavior.
-- Run at least one review-phase skill on the result and fix material issues.
+Run relevant existing project checks. Inspect rendered UI at representative sizes when tools are available; test changed interactions, keyboard paths, relevant errors, and reduced motion. Use a review specialist for a substantive build or redesign. Inspect animation over time; still images cannot establish motion quality. Fix material issues within scope and recheck affected paths.
 
-## Step 6: Report (short)
-- Skills used and what each contributed.
-- Files changed.
-- What was verified and what was not (be honest if something could not be checked).
-- 2-3 suggested next steps.
+For the pack itself, `python "<skill-root>/scripts/pack.py" verify` checks snapshot integrity. `doctor` reports executable availability, not complete runtime readiness.
 
-## Rules
-- Do not commit or push unless the user asks.
-- Do not run every design skill; over-applying produces inconsistent results.
-- If no design skills are installed, say so and proceed with general good practice.
+## 6. Report
+
+Briefly identify specialists used, meaningful changes, checks performed, and material remaining gaps. Separate observed results from assumptions and pending runtime checks. Do not commit or push unless asked.
+
+## Reference
+
+- [Catalog](CATALOG.md): every original manifest and its selector.
+- [Coverage](COVERAGE.md): measured counts and inclusion boundaries.
+- [Dependencies](DEPENDENCIES.md): skill dependencies and optional runtimes.
+- [Portability](PORTABILITY.md): paths, host features, and installation targets.
+- [Third-party notices](THIRD_PARTY_NOTICES.md): attribution and license locations.
+
+Revisions and file hashes are pinned in `sources.lock.json`. The Anthropic source selects frontend-design; the seven other requested repositories are included in full, plus the declared Remotion dependency. Separately recommended third-party projects remain links, as requested.

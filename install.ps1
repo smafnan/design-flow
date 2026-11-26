@@ -1,18 +1,24 @@
-# Installs the design-flow skill globally for Claude Code (Windows PowerShell).
-param([switch]$Uninstall)
-$ErrorActionPreference = "Stop"
-$src  = Join-Path $PSScriptRoot "skill\design-flow"
-$root = if ($env:CLAUDE_SKILLS_DIR) { $env:CLAUDE_SKILLS_DIR } else { Join-Path $HOME ".claude\skills" }
-$dest = Join-Path $root "design-flow"
-
-if ($Uninstall) {
-  if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
-  Write-Host "Removed $dest"
-  exit 0
+param(
+  [ValidateSet('claude', 'codex', 'antigravity')][string]$Agent = 'claude',
+  [ValidateSet('user', 'project')][string]$Scope = 'user',
+  [string]$Project,
+  [string]$SkillsDir,
+  [switch]$Replace,
+  [switch]$Uninstall,
+  [switch]$DryRun
+)
+$ErrorActionPreference = 'Stop'
+$pythonArguments = @((Join-Path $PSScriptRoot 'install.py'), '--agent', $Agent, '--scope', $Scope)
+if ($Project) { $pythonArguments += @('--project', $Project) }
+if ($SkillsDir) { $pythonArguments += @('--skills-dir', $SkillsDir) }
+if ($Replace) { $pythonArguments += '--replace' }
+if ($Uninstall) { $pythonArguments += '--uninstall' }
+if ($DryRun) { $pythonArguments += '--dry-run' }
+if (Get-Command python -ErrorAction SilentlyContinue) {
+  & python @pythonArguments
+} elseif (Get-Command py -ErrorAction SilentlyContinue) {
+  & py -3 @pythonArguments
+} else {
+  throw 'Python 3.10 or newer is required.'
 }
-
-New-Item -ItemType Directory -Force $root | Out-Null
-if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
-Copy-Item -Recurse $src $dest
-Write-Host "Installed design-flow to $dest"
-Write-Host "Restart Claude Code, then run: /design-flow <what you want>"
+exit $LASTEXITCODE

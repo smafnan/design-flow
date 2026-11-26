@@ -1,150 +1,223 @@
 <p align="center">
-  <img src="assets/banner.png" alt="design-flow: one command for a complete design pass" width="100%">
+  <img src="assets/banner.png" alt="Design Flow: one workflow for a complete design pass" width="100%">
 </p>
 
-<p align="center">
-  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-a78bfa?style=flat-square"></a>
-  <img alt="Claude Code skill" src="https://img.shields.io/badge/Claude%20Code-skill-67e8f9?style=flat-square">
-  <img alt="Platforms" src="https://img.shields.io/badge/Windows%20%7C%20macOS%20%7C%20Linux-supported-86efac?style=flat-square">
-  <img alt="Dependencies" src="https://img.shields.io/badge/dependencies-none-fde68a?style=flat-square">
-</p>
+# Design Flow
 
-**design-flow** is a single slash command for [Claude Code](https://claude.com/claude-code) that turns "make this look great" into a structured, repeatable design pass.
+**One design workflow. The specialist collection included.**
 
-Instead of remembering which of your many design skills to call, and in which order, you describe the goal once. design-flow looks at your project, discovers every design-related skill you have installed, picks the right handful, runs them in a sensible order, and verifies the result before reporting back.
+Design Flow integrates **design-studio-pack** into one installable `design-flow` skill. Describe your goal once; the orchestrator selects relevant specialists, reads their original instructions, and guides the work through direction, implementation, and verification.
 
-```text
-/design-flow redesign the landing page
-```
+Unlike the original discovery-only version, this repository includes the specialists themselves: instructions, scripts, references, datasets, and the declared skill dependency. No separate installation of each upstream skill is necessary.
 
----
+- **8 requested sources + 1 declared dependency**, pinned to specific commits.
+- **169 default selectable workflows** across **201 original skill manifests**.
+- **8,476 upstream file entries**, including one materialized symlink, verified against the source lock.
+- **One entry point**, with installation targets for Claude Code, Codex, and Antigravity.
+- **Offline installation** once downloaded; specialist tools may still require runtimes, accounts, or network access.
 
-## Why
+> Manifest counts include variants, duplicates, and development fixtures, not 201 independent production skills. See [coverage](skill/design-flow/COVERAGE.md) and the [complete catalog](skill/design-flow/CATALOG.md).
 
-Once you have a collection of design skills (art direction, motion, accessibility, UX writing, review checklists) a new problem appears: choosing between them. Run too few and the result is generic. Run too many and they contradict each other.
+## Quick start
 
-design-flow is the conductor. It makes that choice for you, consistently:
-
-- **One lead, not a committee.** A single art-direction skill sets the visual direction. Supporting skills must not contradict it.
-- **Your brand wins.** Existing tokens, `DESIGN.md`, components and brand files take priority over generic taste.
-- **Verified, not assumed.** Build, lint, responsive checks and a design review run before it tells you it is done.
-
-## What it does
-
-<p align="center">
-  <img src="assets/flow.png" alt="The six steps of a design-flow run" width="100%">
-</p>
-
-| Step | What happens |
-|---|---|
-| **1. Understand** | Detects your stack (Next.js, React, Vue, Svelte, Astro, plain HTML, React Native, Swift), Tailwind or component libraries, design tokens, `DESIGN.md`, brand files, and whether the task is a new build, a redesign or a polish. |
-| **2. Discover** | Scans your global (`~/.claude/skills`) and project (`.claude/skills`) skills and keeps only the design-related ones. Nothing is hard-wired: install a new skill and the next run can use it. |
-| **3. Plan** | Selects 3-6 skills by phase and tells you the plan and the reasoning. Large or destructive changes are confirmed with you first. |
-| **4. Execute** | Invokes the chosen skills in order, reusing your components and tokens. No new dependencies without telling you. |
-| **5. Verify** | Runs your build, lint and tests, checks the UI at mobile and desktop widths when a browser is available, and runs at least one review skill on the output. |
-| **6. Report** | Summarises which skills were used, which files changed, what was verified (and what could not be), and sensible next steps. |
-
-## See it in action
-
-<p align="center">
-  <img src="assets/terminal.png" alt="Example design-flow session" width="92%">
-</p>
-<p align="center"><sub>Illustrative example of a session. Exact output depends on your project and installed skills.</sub></p>
-
-## Capabilities
-
-design-flow routes work across five phases. Whatever you have installed in each category gets used.
-
-| Phase | Typical skills it looks for | Good for |
-|---|---|---|
-| **Direction** | Art direction, frontend design, UI/UX intelligence, design tokens, colour, type and spacing systems | New builds, redesigns, "this looks generic" |
-| **Build** | Framework and styling skills (React / Next.js, Tailwind, component libraries, mobile), responsive layout, forms, loading states | Turning direction into working code |
-| **Motion** | Animation craft, choreography, gestures, view transitions, motion systems | Entrances, micro-interactions, page transitions |
-| **Review** | Interface guidelines, worst-case data stress tests, visual hierarchy, typography, colour and composition critiques, motion audits | Catching problems before users do |
-| **Accessibility & UX** | WCAG audits, heuristic evaluation, UX writing | Contrast, focus states, reduced motion, clear copy |
-
-### Example prompts
-
-```text
-/design-flow redesign the pricing page, make it feel premium
-/design-flow polish the dashboard and add subtle motion
-/design-flow audit the signup flow for accessibility and UX
-/design-flow build a landing page for a coffee roastery
-/design-flow review my mobile onboarding screens
-/design-flow create a design system: tokens, type scale, components
-```
-
-## Installation
-
-**Requirements:** [Claude Code](https://claude.com/claude-code). No other dependencies.
-
-### Option 1: install script
+Requires **Python 3.10+**. Use `python3` instead of `python` where appropriate.
 
 ```bash
 git clone https://github.com/smafnan/design-flow.git
 cd design-flow
-./install.sh            # macOS, Linux, Git Bash
+python install.py --agent claude
 ```
 
-```powershell
-.\install.ps1           # Windows PowerShell
-```
-
-### Option 2: copy the folder
-
-Copy `skill/design-flow` into your Claude Code skills directory:
-
-| Scope | Location |
-|---|---|
-| All projects (recommended) | `~/.claude/skills/design-flow` |
-| One project only | `<project>/.claude/skills/design-flow` |
-
-Then **restart Claude Code** so the skill is picked up.
-
-### Uninstall
+Choose the appropriate installation target:
 
 ```bash
-./install.sh --uninstall        # or: .\install.ps1 -Uninstall
+python install.py --agent claude
+python install.py --agent codex
+python install.py --agent antigravity
 ```
+
+Each command installs the **same complete pack**. Start a new agent session afterward.
+
+| Host | Default user installation |
+|---|---|
+| Claude Code | `~/.claude/skills/design-flow` |
+| Codex | `~/.agents/skills/design-flow` |
+| Antigravity | `~/.gemini/config/skills/design-flow` |
+
+Convenience wrappers are included:
+
+```powershell
+.\install.ps1 -Agent codex
+```
+
+```bash
+sh install.sh --agent claude
+```
+
+### Project and custom paths
+
+```bash
+python install.py --agent claude --scope project --project /path/to/project
+python install.py --agent codex --scope project --project /path/to/project
+python install.py --skills-dir /path/to/custom/skills
+python install.py --agent codex --dry-run
+```
+
+Project installs use `.claude/skills` for Claude Code and `.agents/skills` for Codex and Antigravity. `--skills-dir` specifies the parent directory; the installer adds `design-flow`. The existing `CLAUDE_SKILLS_DIR` environment override is supported for Claude user installs.
 
 ## Usage
 
+Claude Code:
+
 ```text
-/design-flow <what you want designed or improved>
+/design-flow redesign this landing page while preserving our brand
 ```
 
-Run it with no arguments and it will ask what you want to work on. You can also describe a design task in plain language and Claude can invoke the skill on its own.
+Codex:
 
-design-flow works best when you have a few design skills installed. With none, it says so and falls back to general good practice.
+```text
+$design-flow audit this dashboard for accessibility and responsive behavior
+```
 
-## Customising
+For other host interfaces, request the skill explicitly:
 
-Everything lives in one readable file: [`skill/design-flow/SKILL.md`](skill/design-flow/SKILL.md).
+```text
+Use design-flow to improve these interactions and respect reduced-motion preferences.
+```
 
-- **Change the routing:** edit the phase list in *Step 3* to prefer your own skills.
-- **Change the guard rails:** the *Rules* section controls things like "never commit unless asked".
-- **Add a quick mode:** drop the Verify step for fast iterations.
+### What you can do
 
-## Principles
+- Develop visual direction and implement responsive pages and components.
+- Review checkout, onboarding, navigation, and other product flows.
+- Establish design tokens, typography, spacing, and component consistency.
+- Refine empty states, validation messages, loading states, and UX copy.
+- Design interactions, transitions, and motion systems.
+- Plan or build Remotion product explainers with the required runtime.
+- Review accessibility, frontend performance, and framework composition.
 
-- **Discover, don't assume.** The skill list is read fresh on every run.
-- **Fewer, better.** Three to six skills beat thirty.
-- **Respect the project.** Reuse existing components, tokens and conventions.
-- **Say what you checked.** The report states what was verified and what was not.
-- **No surprises.** Nothing is committed or pushed unless you ask.
+The pack supplies instructions and resources, not an autonomous design application. Results depend on the model, project, tools, and checks performed.
+
+## Workflow
+
+| Phase | Responsibility |
+|---|---|
+| **Understand** | Inspect the request, stack, project instructions, brand, components, and constraints. |
+| **Discover** | Search the bundled catalog and load relevant original specialist instructions. |
+| **Plan** | Choose one primary direction and a small set of supporting specialists; resolve conflicts against project requirements. |
+| **Execute** | Apply guidance while preserving project conventions and requested scope. |
+| **Verify** | Run appropriate available checks and inspect visual quality, responsiveness, accessibility, and motion where tools allow. |
+| **Report** | Summarize changes, selected specialists, completed checks, and anything unverified. |
+
+Review-only requests remain review-only. Installation does not enable upstream hooks, install framework dependencies, deploy projects, or authorize commits or pushes.
+
+## Included sources
+
+| Source | Main contribution |
+|---|---|
+| [Impeccable](https://github.com/pbakaus/impeccable) | Interface refinement, visual critique, and design quality workflows. |
+| [Taste Skill](https://github.com/Leonxlnx/taste-skill), linked from [tasteskill.dev](https://www.tasteskill.dev/docs) | Visual direction and frontend craft. |
+| [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | Searchable design guidance, style resources, and implementation references. |
+| [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Distinctive frontend design; only the requested skill subtree, not the entire Anthropic library. |
+| [Emil Kowalski's skills](https://github.com/emilkowalski/skills) | Interaction, animation, and interface engineering guidance. |
+| [Awesome Motion Design Agent Skills](https://github.com/frankxai/awesome-motion-design-agent-skills) | Motion-oriented workflows and resources. |
+| [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills) | Framework, composition, performance, and interface guidance, plus other shipped workflows. |
+| [Designer Skills](https://github.com/Owl-Listener/designer-skills) | Product design, research, UX, and design operations workflows. |
+| [Remotion Skills](https://github.com/remotion-dev/skills) | The motion collection's declared skill dependency and its shipped resources. |
+
+### Scope and completeness
+
+The pack preserves seven requested repository snapshots, the requested Anthropic `frontend-design` subtree with its notice material, and the declared Remotion dependency snapshot. Original files live under `.upstream`; catalogs provide discovery without replacing originals with summaries.
+
+All **201** discovered `SKILL.md` files are recorded: **169 active**, **22 alternate variants**, **6 duplicates**, and **4 development fixtures**. Default discovery excludes the latter categories, but they are not removed. Supporting resources have their own index.
+
+The scope is **eight sources plus declared skill dependencies**, not every unrelated repository linked in a README. Runtime packages, browsers, paid services, and credentials are not automatically installed. See [dependencies](skill/design-flow/DEPENDENCIES.md) for requirements and the recorded dependency resolution.
+
+## Explore and verify
+
+From the repository root:
+
+```bash
+python skill/design-flow/scripts/pack.py search "accessible forms"
+python skill/design-flow/scripts/pack.py list --source emil
+python skill/design-flow/scripts/pack.py list --all
+python skill/design-flow/scripts/pack.py verify
+python skill/design-flow/scripts/pack.py doctor
+python tools/validate.py
+```
+
+Use a search result's ID with `pack.py locate ID` to find its original directories, or `pack.py show ID` to read its instructions. `pack.py run ID -- EXECUTABLE ARGUMENTS` runs an explicitly chosen helper with relocated path placeholders and environment variables; it does not install dependencies. See [portability](skill/design-flow/PORTABILITY.md).
+
+`verify` checks the pinned upstream payload. `validate.py` also checks catalog completeness, manifest hashes, dependency resolution, resource paths, authored Python syntax, and documentation links. `doctor` reports executable availability, not full runtime compatibility.
+
+## Compatibility
+
+| Environment | Support boundary |
+|---|---|
+| Claude Code | Standard skill folder and explicit invocation; upstream hooks/plugins require separate host-aware setup. |
+| Codex | Standard skill folder plus `agents/openai.yaml`; no dependency on Claude's Skill tool. |
+| Antigravity | Standard skill files and a targeted installer path; check discovery and execution in your installed version. |
+| Gemini CLI / Gemini chat | Not a tested installation target. Antigravity support does not imply Gemini CLI or web-chat integration. |
+
+The Python installer is designed for Windows, macOS, and Linux. Local verification covers the payload and installer behavior; live execution in each host and macOS/Linux installation are not asserted as tested. A host must provide file access and, for scripts, command execution. Tool-specific upstream features may require manual equivalents or remain unavailable.
+
+This is a **single skill-folder distribution**, not a marketplace plugin. Nested specialists are discoverable through the pack; they are not separately registered as hundreds of host commands.
+
+## Upgrade or uninstall
+
+Existing installations are never silently overwritten:
+
+```bash
+python install.py --agent claude --replace
+python install.py --agent claude --uninstall
+```
+
+Use the same agent, scope, and custom path options used at installation. Replacement and uninstall preserve the previous folder under `.design-flow-backups` within the parent skills directory. The exact backup location is printed. Uninstall requires an installation receipt; older/manual installations must be handled explicitly or upgraded with `--replace` first.
+
+Reinstalling does not refresh upstream sources: this pack deliberately uses pinned snapshots.
 
 ## Repository layout
 
 ```text
 design-flow/
-├── skill/design-flow/SKILL.md   # the skill itself
-├── install.sh                   # macOS / Linux / Git Bash installer
-├── install.ps1                  # Windows installer
-├── assets/                      # README images (+ HTML sources in assets/src)
-├── LICENSE
-└── README.md
+  install.py                  Validated installer with recoverable backups
+  install.ps1 / install.sh    Convenience wrappers
+  sources.json                Source definitions and scope
+  requirements-build.txt      Catalog rebuild dependency only
+  skill/design-flow/
+    SKILL.md                  Single orchestrator entry point
+    agents/openai.yaml        Codex discovery metadata
+    .upstream/                Preserved source snapshots and resources
+    sources.lock.json         Commit pins, hashes, modes, and link metadata
+    catalog.json              Manifest inventory and classification
+    resources.json            Supporting-resource index
+    dependencies.lock.json    Declared skill dependency resolution
+    CATALOG.md / COVERAGE.md   Human-readable inventory
+    DEPENDENCIES.md            Runtime requirements and boundaries
+    PORTABILITY.md            Host and helper execution guidance
+    THIRD_PARTY_NOTICES.md     Attribution and license notes
+    scripts/pack.py            Discovery and helper CLI
+  tools/                      Vendoring, catalog, validation, and ZIP utilities
+  docs/MAINTAINING.md          Reproducibility and release workflow
+  assets/                     Repository illustrations
 ```
 
-## License
+## Maintenance and offline distribution
 
-[MIT](LICENSE)
+Normal installation needs no package downloads. Catalog rebuilds use a separate build requirement:
+
+```bash
+python -m pip install -r requirements-build.txt
+python tools/build_catalog.py
+python tools/validate.py
+python tools/package.py
+```
+
+Packaging creates `dist/design-flow.zip` and a SHA-256 checksum, validates every archived file, and includes installers and documentation. Extract the archive and run its installer. Build output and local installation state are not source-controlled.
+
+See [MAINTAINING.md](docs/MAINTAINING.md) before updating snapshots or staging vendored files: preserved upstream ignore files can hide required files from a normal `git add`.
+
+## Licensing and attribution
+
+Original Design Flow code and newly authored integration code are covered by the root [MIT license](LICENSE). **That license does not relicense bundled third-party content.** Original notices and license files are preserved, and source commits are recorded in the lock file.
+
+Read [THIRD_PARTY_NOTICES.md](skill/design-flow/THIRD_PARTY_NOTICES.md) before redistributing the full pack. The pinned Vercel and Remotion snapshots do not contain standalone repository license files; per-skill metadata is not a substitute for confirming redistribution rights for every included file. Review those permissions before publishing a public bundled release.
